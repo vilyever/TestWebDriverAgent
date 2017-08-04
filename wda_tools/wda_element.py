@@ -130,6 +130,11 @@ class WDAElement:
         response_value = self._request("dragfromtoforduration", 'POST', data, using_wda=True)
         return response_value
 
+    def get_visible_cells(self):
+        response_value = self._request("getVisibleCells", 'GET', using_wda=True)
+        elements = self._elements_with_response_value(response_value)
+        return elements
+
     def find_element_by_id(self, id):
         elements = self.find_elements_by_id(id)
         element = next(iter(elements or []), None)
@@ -208,15 +213,15 @@ class WDAElement:
         data = json.dumps({'using': using, 'value': value})
         response_value = self._request("elements", 'POST', data)
 
-        return self._elements_with_value(response_value)
+        return self._elements_with_response_value(response_value)
 
-    def _elements_with_value(self, value):
+    def _elements_with_response_value(self, response_value):
         elements = []
 
-        if not isinstance(value, list):
+        if not isinstance(response_value, list):
             return elements
 
-        for item in value:
+        for item in response_value:
             if item.has_key("ELEMENT"):
                 element = WDAElement(self._session, self, item["ELEMENT"])
                 elements.append(element)

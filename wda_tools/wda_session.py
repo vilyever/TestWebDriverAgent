@@ -220,15 +220,15 @@ class WDASession:
         data = json.dumps({'using': using, 'value': value})
         response_value = self._request("elements", 'POST', data)
 
-        return self._elements_with_value(response_value)
+        return self._elements_with_response_value(response_value)
 
-    def _elements_with_value(self, value):
+    def _elements_with_response_value(self, response_value):
         elements = []
 
-        if not isinstance(value, list):
+        if not isinstance(response_value, list):
             return elements
 
-        for item in value:
+        for item in response_value:
             if item.has_key("ELEMENT"):
                 element = wda_element.WDAElement(self, None, item["ELEMENT"])
                 elements.append(element)
